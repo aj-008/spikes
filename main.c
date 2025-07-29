@@ -91,6 +91,8 @@ void InitGame(Texture2D *birdTexture) {
     spikePoint[1] = 40;
     side[0] = screenWidth;
     side[1] = 0;
+    genSpikeCoords();
+    drawSpikesRound();
 }
 
 static void UpdateGame(Rectangle *birdFrame, Texture2D *birdTexture) {
@@ -107,7 +109,8 @@ static void UpdateGame(Rectangle *birdFrame, Texture2D *birdTexture) {
 
 
     DrawTextureRec(*birdTexture, *birdFrame, birdPosition, WHITE);
-    drawSpikes();
+    birdPosition = Vector2Add(birdPosition, birdSpeed); 
+    Rectangle bird = { birdPosition.x, birdPosition.y, (float)frameWidth, 100 };
 
     drawSpikesRound();
 
@@ -122,22 +125,25 @@ static void UpdateGame(Rectangle *birdFrame, Texture2D *birdTexture) {
         frameCounter %= numFrames;
         birdFrame->x = frameWidth * frameCounter;
     }
-    birdPosition = Vector2Add(birdPosition, birdSpeed); 
-    Rectangle bird = { birdPosition.x, birdPosition.y, (float)frameWidth, 100 };
+
+    for (int i = 0; i < 10; i++) {
+        if (CheckCollisionRecs(spikeArray[i], bird)) {
+            gameOver = true;
+        }
+    }
+
     if (birdPosition.x >= screenWidth - frameWidth || birdPosition.x <= 0) {
         birdSpeed.x = -birdSpeed.x;
         score += 1;
         roundIdx = score % 2;
-        for (int i = 0; i < 10; i++) {
-            if (CheckCollisionRecs(spikeArray[i], bird)) {
-                gameOver = true;
-            }
-        }
-        genSpikeCoords();
+
+        genSpikeCoords();        
+
     }
 
     //Collision Check
     DrawRectangleRec(bird, GREEN);
+
     if (CheckCollisionRecs(topSpikes, bird) || CheckCollisionRecs(bottomSpikes, bird)) {
         gameOver = true;
     }
@@ -165,7 +171,7 @@ void drawSpikesRound(void) {
     //will need collision checks for each spike?
     int spikeIdx = (score % 5) % numColors;
     for (int i = 0; i < 10; i++) {
-        Rectangle spike_t = { 0, spikeYVals[i], 40, 60 };
+        Rectangle spike_t = { side[roundIdx], spikeYVals[i], 40, 60 };
         spikeArray[i] = spike_t;
         if (spikeYVals[i] != 0) {
             int spikeY = spikeYVals[i];
