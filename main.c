@@ -1,6 +1,5 @@
 #include "raylib.h"
 #include "raymath.h"
-#include <string.h>
 
 #define SPIKE_HEIGHT 60
 
@@ -49,7 +48,7 @@ int spikeCoord = screenHeight/2;
 
 int main(void) {
     InitWindow(screenWidth, screenHeight, "Don't Touch The Spikes");
-    Texture2D birdTexture = LoadTexture("flap.png");
+    Texture2D birdTexture = LoadTexture("player.png");
     SetTargetFPS(60);
 
     InitGame(&birdTexture);
@@ -82,7 +81,7 @@ int main(void) {
 
 void InitGame(Texture2D *birdTexture) {
     numFrames = 2;
-    frameWidth = birdTexture->width / numFrames;
+    frameWidth = 63;
     birdFrame.width = frameWidth;
     birdFrame.height = birdTexture->height;
     birdPosition.x = (float)screenWidth/4;
@@ -98,6 +97,8 @@ void InitGame(Texture2D *birdTexture) {
 static void UpdateGame(Rectangle *birdFrame, Texture2D *birdTexture) {
     DrawRectangleRec(topSpikes, RED);
     DrawRectangleRec(bottomSpikes, RED);
+
+    DrawRectangleRec(*birdFrame, GREEN);
 
 
     ClearBackground(RAYWHITE);

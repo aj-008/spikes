@@ -9,7 +9,8 @@ required to build.
 
 ---
 #TODO:
- - replace player png
+ - replace player png (done)
  - make hitbox overlap with player properly
- - spikes need to spawn on round 1
+ - spikes need to spawn on round 1 (done)
  - prettier text
+ - player needs to reverse
