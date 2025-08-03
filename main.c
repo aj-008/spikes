@@ -90,17 +90,12 @@ void InitGame(Texture2D *birdTexture) {
     spikePoint[1] = 40;
     side[0] = screenWidth;
     side[1] = 0;
+    roundIdx = 0;
     genSpikeCoords();
     drawSpikesRound();
 }
 
 static void UpdateGame(Rectangle *birdFrame, Texture2D *birdTexture) {
-    DrawRectangleRec(topSpikes, RED);
-    DrawRectangleRec(bottomSpikes, RED);
-
-    DrawRectangleRec(*birdFrame, GREEN);
-
-
     ClearBackground(RAYWHITE);
     DrawFPS(100, 100);
     char firstDigit = (score / 10) + 48;
@@ -111,9 +106,10 @@ static void UpdateGame(Rectangle *birdFrame, Texture2D *birdTexture) {
 
     DrawTextureRec(*birdTexture, *birdFrame, birdPosition, WHITE);
     birdPosition = Vector2Add(birdPosition, birdSpeed); 
-    Rectangle bird = { birdPosition.x, birdPosition.y, (float)frameWidth, 100 };
+    Rectangle bird = { birdPosition.x, birdPosition.y + birdFrame->height - 20, (float)frameWidth, 25 };
 
     drawSpikesRound();
+    DrawRectangleRec(bird, GREEN);
 
     if (IsKeyPressed(KEY_SPACE)) {
         frameCounter++;
@@ -143,12 +139,9 @@ static void UpdateGame(Rectangle *birdFrame, Texture2D *birdTexture) {
     }
 
     //Collision Check
-    DrawRectangleRec(bird, GREEN);
-
     if (CheckCollisionRecs(topSpikes, bird) || CheckCollisionRecs(bottomSpikes, bird)) {
         gameOver = true;
     }
-
 
     birdSpeed.y += gravity;
 }
